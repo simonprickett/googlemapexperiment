@@ -15,7 +15,7 @@ var app = {
             heightIncr = 0,
             testPosNorth = undefined,
             testPosSouth = undefined;
-
+            
         google.maps.Polygon.prototype.getBoundingBox=function(){
             var bounds = new google.maps.LatLngBounds();
             this.getPath().forEach(function(element,index){bounds.extend(element)});
@@ -69,13 +69,14 @@ var app = {
             for (n = 1; n < 11; n++) {
                 console.log('Finding point... iteration ' + n);
                 testPosNorth = google.maps.geometry.spherical.computeOffset(centerPoint, (heightIncr * n), 0);
-                testPosSouth = google.maps.geometry.spherical.computeOffset(centerPoint, (heightIncr * n), 180);
 
                 if (google.maps.geometry.poly.containsLocation(testPosNorth, app.polygon)) {
                     // That will do
                     markerPos = testPosNorth;
                     break;
                 }
+
+                testPosSouth = google.maps.geometry.spherical.computeOffset(centerPoint, (heightIncr * n), 180);
 
                 if (google.maps.geometry.poly.containsLocation(testPosSouth, app.polygon)) {
                     // That will do
