@@ -6,7 +6,7 @@ Experiments with placing a marker around the center of a polygon.
 
 This needs more testing, but the process is roughly:
 
-* Add a `getBoundingBox` method to `google.maps.Polygon.prototype` which returns a LatLngBounds object (rectangle) that entirely contains an arbitrarily complex polygon.
+* Add a `getBoundingBox` method to `google.maps.Polygon.prototype` which returns a LatLngBounds object (rectangle) that entirely contains an arbitrarily complex polygon
 * Get the center of that bounding box
 * If the center of the bounding box is within the area of the polygon, put the marker there
 * If the center of the bounding box is not within the area of the polygon then:
