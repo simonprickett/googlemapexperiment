@@ -11,22 +11,23 @@ var app = {
             markerPos = undefined,
             northWest = undefined,
             boundsHeight = 0,
+            boundsWidth = 0,
             n = 1,
             heightIncr = 0,
+            widthIncr = 0,
+            maxSearchSteps = 10,
             testPosNorth = undefined,
-            testPosSouth = undefined;
-            
-        google.maps.Polygon.prototype.getBoundingBox=function(){
-            var bounds = new google.maps.LatLngBounds();
-            this.getPath().forEach(function(element,index){bounds.extend(element)});
-            return bounds;
-        }
-  
+            testPosSouth = undefined,
+            testPosEast = undefined,
+            testPosWest = undefined;
+
+        // Set up map  
         app.map = new google.maps.Map(document.getElementById('map'), {
             center: { lat: 41.83771, lng: -87.85090 },
             zoom: 11
         });
 
+        // Draw a sample polygon
         app.polygon = new google.maps.Polygon({
             paths: [
                 { lat: 41.78500, lng: -87.75133 },
@@ -49,6 +50,13 @@ var app = {
 
         app.polygon.setMap(app.map);
 
+
+        google.maps.Polygon.prototype.getBoundingBox=function(){
+            var bounds = new google.maps.LatLngBounds();
+            this.getPath().forEach(function(element,index){bounds.extend(element)});
+            return bounds;
+        };
+
         polygonBounds = app.polygon.getBoundingBox();
         centerPoint = polygonBounds.getCenter(); 
 
@@ -60,27 +68,56 @@ var app = {
             northWest = new google.maps.LatLng(polygonBounds.getNorthEast().lat(), polygonBounds.getSouthWest().lng());
             console.log(northWest);
 
+            // Work out how tall the bounds are and what our search increment will be
             boundsHeight = google.maps.geometry.spherical.computeDistanceBetween(northWest, polygonBounds.getSouthWest());
-            console.log('height: ' + boundsHeight);
+            heightIncr = boundsHeight / maxSearchSteps;
 
-            heightIncr = boundsHeight / 10;
+            // Work out how wide the bounds are and what our search increment will be
+            boundsWidth = google.maps.geometry.spherical.computeDistanceBetween(northWest, polygonBounds.getNorthEast());
+            widthIncr = boundsWidth / maxSearchSteps;
+
 
             // Look up towards the top
-            for (n = 1; n < 11; n++) {
+            for (n = 1; n <= maxSearchSteps; n++) {
                 console.log('Finding point... iteration ' + n);
+
+                // Test point North of Centroid
                 testPosNorth = google.maps.geometry.spherical.computeOffset(centerPoint, (heightIncr * n), 0);
 
                 if (google.maps.geometry.poly.containsLocation(testPosNorth, app.polygon)) {
                     // That will do
                     markerPos = testPosNorth;
+                    console.log('Using a Northern point.');
                     break;
                 }
 
+                // Test point East of Centroid
+                testPosEast = google.maps.geometry.spherical.computeOffset(centerPoint, (widthIncr * n), 90);
+
+                if (google.maps.geometry.poly.containsLocation(testPosEast, app.polygon)) {
+                    // That will do
+                    markerPos = testPosEast;
+                    console.log('Using an Eastern point.');
+                    break;
+                }
+
+                // Test point South of Centroid
                 testPosSouth = google.maps.geometry.spherical.computeOffset(centerPoint, (heightIncr * n), 180);
 
                 if (google.maps.geometry.poly.containsLocation(testPosSouth, app.polygon)) {
                     // That will do
                     markerPos = testPosSouth;
+                    console.log('Using a Southern point.');
+                    break;
+                }
+
+                // Test point West of Centroid
+                testPosWest = google.maps.geometry.spherical.computeOffset(centerPoint, (widthIncr * n), 270);
+
+                if (google.maps.geometry.poly.containsLocation(testPosWest, app.polygon)) {
+                    // That will do
+                    markerPos = testPosWest;
+                    console.log('Using a Western point.');
                     break;
                 }
             }            
