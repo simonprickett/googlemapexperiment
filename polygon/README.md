@@ -15,3 +15,9 @@ This needs more testing, but the process is roughly:
 	* If any of those points is within the area of the polygon, place the marker there and stop
 
 This may not be foolproof but should get a point within the polygon that's good enough.  As this moves up and down the bounding box looking for points within the polygon at 5% height increments, it could miss a very thin slice of the polygon that crosses the center line and never find a point... could fix this by using 1% increments and a 50 loop count for higher search "resolution".
+
+## Other Ways of Doing This
+
+There are other possible algorithms for getting similar results:
+
+* MapBox has one [here](https://github.com/mapbox/polylabel/blob/master/index.js)
