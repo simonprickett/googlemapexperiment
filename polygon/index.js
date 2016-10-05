@@ -5,7 +5,7 @@ var app = {
         var polygon,
             map;
 
-        // Add useful missing method - TODO credit StackOverflow thread
+        // Add useful missing method - credit to http://stackoverflow.com/a/13772082/5338708
         google.maps.Polygon.prototype.getBoundingBox = function() {
             var bounds = new google.maps.LatLngBounds();
 
@@ -30,7 +30,7 @@ var app = {
                 testPos;
 
             if (google.maps.geometry.poly.containsLocation(centerPoint, this)) {
-                // Nothing to do center is in polygon use it as is
+                // Nothing to do Centroid is in polygon use it as is
                 return centerPoint;
             } else {
                 northWest = new google.maps.LatLng(polygonBounds.getNorthEast().lat(), polygonBounds.getSouthWest().lng());
