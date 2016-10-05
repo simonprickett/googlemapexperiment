@@ -2,8 +2,8 @@
 
 var app = {
     initialize: function() {
-        var polygon,
-            map;
+        var map,
+            polygon;
 
         // Add useful missing method - credit to http://stackoverflow.com/a/13772082/5338708
         google.maps.Polygon.prototype.getBoundingBox = function() {
@@ -18,29 +18,29 @@ var app = {
 
         // Add center calculation method
         google.maps.Polygon.prototype.getApproximateCenter = function() {
-            var polygonBounds = this.getBoundingBox(),
-                centerPoint = polygonBounds.getCenter(),
-                northWest,
-                boundsHeight = 0,
+            var boundsHeight = 0,
                 boundsWidth = 0,
-                n = 1,
+                centerPoint,
                 heightIncr = 0,
-                widthIncr = 0,
                 maxSearchSteps = 10,
-                testPos;
+                n = 1,
+                northWest,
+                polygonBounds = this.getBoundingBox(),
+                testPos,
+                widthIncr = 0;
+
+            centerPoint = polygonBounds.getCenter();
 
             if (google.maps.geometry.poly.containsLocation(centerPoint, this)) {
                 // Nothing to do Centroid is in polygon use it as is
                 return centerPoint;
             } else {
+                // Calculate NorthWest point so we can work out height of polygon NW->SE
                 northWest = new google.maps.LatLng(polygonBounds.getNorthEast().lat(), polygonBounds.getSouthWest().lng());
-                console.log(northWest);
 
-                // Work out how tall the bounds are and what our search increment will be
+                // Work out how tall and wide the bounds are and what our search increment will be
                 boundsHeight = google.maps.geometry.spherical.computeDistanceBetween(northWest, polygonBounds.getSouthWest());
                 heightIncr = boundsHeight / maxSearchSteps;
-
-                // Work out how wide the bounds are and what our search increment will be
                 boundsWidth = google.maps.geometry.spherical.computeDistanceBetween(northWest, polygonBounds.getNorthEast());
                 widthIncr = boundsWidth / maxSearchSteps;
 
@@ -48,32 +48,30 @@ var app = {
                 for (; n <= maxSearchSteps; n++) {
                     // Test point North of Centroid
                     testPos = google.maps.geometry.spherical.computeOffset(centerPoint, (heightIncr * n), 0);
-
                     if (google.maps.geometry.poly.containsLocation(testPos, this)) {
-                        return(testPos);
+                        break;
                     }
 
                     // Test point East of Centroid
                     testPos = google.maps.geometry.spherical.computeOffset(centerPoint, (widthIncr * n), 90);
-
                     if (google.maps.geometry.poly.containsLocation(testPos, this)) {
-                        return(testPos);
+                        break;
                     }
 
                     // Test point South of Centroid
                     testPos = google.maps.geometry.spherical.computeOffset(centerPoint, (heightIncr * n), 180);
-
                     if (google.maps.geometry.poly.containsLocation(testPos, this)) {
-                        return(testPos);
+                        break;
                     }
 
                     // Test point West of Centroid
                     testPos = google.maps.geometry.spherical.computeOffset(centerPoint, (widthIncr * n), 270);
-
                     if (google.maps.geometry.poly.containsLocation(testPos, this)) {
-                        return(testPos);
+                        break;
                     }
                 }
+
+                return(testPos);
             }
         };
 
