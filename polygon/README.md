@@ -20,4 +20,5 @@ This may not be foolproof but should get a point within the polygon that's good 
 
 There are other possible algorithms for getting similar results:
 
-* MapBox has one [here](https://github.com/mapbox/polylabel/blob/master/index.js)
+* MapBox has one [here](https://github.com/mapbox/polylabel/blob/master/index.js) with a supporting [blog post]		(https://www.mapbox.com/blog/polygon-center/)
+* [Discussion on calculating centroid](http://mathcentral.uregina.ca/qq/database/qq.09.07/h/david7.html)
