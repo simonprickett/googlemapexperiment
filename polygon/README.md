@@ -16,6 +16,11 @@ Find approximate center point of an arbitrary polygon on Google Maps.  Process:
 
 This may not be foolproof but should get a point within the polygon that's good enough.  As this moves up and down the bounding box looking for points within the polygon at 5% height increments, it could miss a very thin slice of the polygon that crosses the center line and never find a point... could fix this by using 1% increments and a 50 loop count for higher search "resolution" but lower performance.
 
+## Notes
+
+* You need to supply a Google Maps API key and set this in the link to the Google Maps API JavaScript in `index.html`
+* Because we are using `google.maps.geometry` functions, the link to get the Google Maps API JavaSCript needs to include `&libraries=geometry` (see `index.html`)
+
 ## Other Ways of Doing This
 
 There are other possible algorithms for getting similar results:
