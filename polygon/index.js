@@ -1,15 +1,22 @@
-"use strict";
+'use strict';
 
 var app = {
+    // Utility function to make a polygon with some standard properties set
+    makePolygon: function(paths, color) {
+        return (new google.maps.Polygon({
+            paths: paths,
+            strokeColor: color,
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: color,
+            fillOpacity: 0.35
+        }));
+    },
+
+    // Run on page load
     initialize: function() {
         var map,
-            polygon,
-            polygon2,
-            polygon3,
-            polygon4,
-            polygon5,
-            polygon6,
-            polygon7;
+            polygons = [];
 
         // Add useful missing method - credit to http://stackoverflow.com/a/13772082/5338708
         google.maps.Polygon.prototype.getBoundingBox = function() {
@@ -19,7 +26,7 @@ var app = {
                 bounds.extend(element)
             });
 
-            return bounds;
+            return(bounds);
         };
 
         // Add center calculation method
@@ -35,6 +42,7 @@ var app = {
                 testPos,
                 widthIncr = 0;
 
+            // Get polygon Centroid
             centerPoint = polygonBounds.getCenter();
 
             if (google.maps.geometry.poly.containsLocation(centerPoint, this)) {
@@ -88,8 +96,7 @@ var app = {
         });
 
         // Draw sample polygons
-        polygon = new google.maps.Polygon({
-            paths: [
+        polygons.push(this.makePolygon([
                 { lat: 41.78500, lng: -87.75133 },
                 { lat: 41.77681, lng: -87.87836 },
                 { lat: 41.80138, lng: -87.92780 },
@@ -101,43 +108,28 @@ var app = {
                 { lat: 41.87607, lng: -87.77056 },
                 { lat: 41.78500, lng: -87.75133 }
             ],
-            strokeColor: '#FF0000',
-            strokeOpacity: 0.8,
-            strokeWeight: 2,
-            fillColor: '#FF0000',
-            fillOpacity: 0.35
-        });
+            '#FF0000'
+        ));
 
-        polygon2 = new google.maps.Polygon({
-            paths: [
+        polygons.push(app.makePolygon([
                 { lat: 41.739921, lng: -88.047180 },
                 { lat: 41.801887, lng: -88.074646 },
                 { lat: 41.804958, lng: -88.099365 }
             ],
-            strokeColor: '#00FF00',
-            strokeOpacity: 0.8,
-            strokeWeight: 2,
-            fillColor: '#00FF00',
-            fillOpacity: 0.35
-        });
+            '#00FF00'
+        ));
 
-        polygon3 = new google.maps.Polygon({
-            paths: [
+        polygons.push(app.makePolygon([
                 { lat: 41.961899, lng: -88.119965 },
                 { lat: 41.940962, lng: -87.990189 },
                 { lat: 41.884244, lng: -88.022461 },
                 { lat: 41.878620, lng: -88.060226 },
                 { lat: 41.934833, lng: -88.095932 }
             ],
-            strokeColor: '#0000FF',
-            strokeOpacity: 0.8,
-            strokeWeight: 2,
-            fillColor: '#0000FF',
-            fillOpacity: 0.35
-        });
+            '#0000FF'
+        ));
 
-        polygon4 = new google.maps.Polygon({
-            paths: [
+        polygons.push(app.makePolygon([
                 { lat: 41.902644, lng: -87.948303 },
                 { lat: 41.952198, lng: -87.920837 },
                 { lat: 41.933811, lng: -87.878265 },
@@ -147,28 +139,18 @@ var app = {
                 { lat: 41.945559, lng: -87.726517 },
                 { lat: 41.877598, lng: -87.629700 }
             ],
-            strokeColor: '#FFFF00',
-            strokeOpacity: 0.8,
-            strokeWeight: 2,
-            fillColor: '#FFFF00',
-            fillOpacity: 0.35
-        });
+            '#FFFF00'
+        ));
 
-        polygon5 = new google.maps.Polygon({
-            paths: [
+        polygons.push(app.makePolygon([
                 { lat: 41.769119, lng: -88.196182 },
                 { lat: 41.716349, lng: -88.193436 },
                 { lat: 41.762973, lng: -88.117218 }
             ],
-            strokeColor: '#FF7F50',
-            strokeOpacity: 0.8,
-            strokeWeight: 2,
-            fillColor: '#FF7F50',
-            fillOpacity: 0.35
-        });
+            '#FF7F50'
+        ));
 
-        polygon6 = new google.maps.Polygon({
-            paths: [
+        polygons.push(app.makePolygon([
                 { lat: 41.842311, lng: -87.680511 },
                 { lat: 41.852541, lng: -87.621460 },
                 { lat: 41.706610, lng: -87.622833 },
@@ -177,70 +159,25 @@ var app = {
                 { lat: 41.726599, lng: -87.916718 },
                 { lat: 41.741971, lng: -87.677078 }
             ],
-            strokeColor: '#000000',
-            strokeOpacity: 0.8,
-            strokeWeight: 2,
-            fillColor: '#000000',
-            fillOpacity: 0.35
-        });
+            '#000000'
+        ));
 
-        polygon7 = new google.maps.Polygon({
-            paths: [
+        polygons.push(app.makePolygon([
                 { lat: 41.877086, lng: -88.143311 },
                 { lat: 41.884244, lng: -88.092499 },
                 { lat: 41.836172, lng: -88.088379 },
                 { lat: 41.839753, lng: -88.137817 }
             ],
-            strokeColor: '#800080',
-            strokeOpacity: 0.8,
-            strokeWeight: 2,
-            fillColor: '#800080',
-            fillOpacity: 0.35
-        });
+            '#800080'
+        ));
 
-        // Put sample polygons on the map
-        polygon.setMap(map);
-        polygon2.setMap(map);
-        polygon3.setMap(map);
-        polygon4.setMap(map);
-        polygon5.setMap(map);
-        polygon6.setMap(map);
-        polygon7.setMap(map);
-
-        // Put a marker at approximated polygon centers
-        new google.maps.Marker({
-            position: polygon.getApproximateCenter(),
-            map: map
-        });
-
-        new google.maps.Marker({
-            position: polygon2.getApproximateCenter(),
-            map: map
-        });
-
-        new google.maps.Marker({
-            position: polygon3.getApproximateCenter(),
-            map: map
-        });
-
-        new google.maps.Marker({
-            position: polygon4.getApproximateCenter(),
-            map: map
-        });
-
-        new google.maps.Marker({
-            position: polygon5.getApproximateCenter(),
-            map: map
-        });
-
-        new google.maps.Marker({
-            position: polygon6.getApproximateCenter(),
-            map: map
-        });
-
-        new google.maps.Marker({
-            position: polygon7.getApproximateCenter(),
-            map: map
+        // Put sample polygons on the map with marker at approximated center
+        polygons.forEach(function(poly) {
+            poly.setMap(map);
+            new google.maps.Marker({
+                position: poly.getApproximateCenter(),
+                map: map
+            });
         });
     }
 }
